@@ -186,7 +186,7 @@ class Lightpack
 
   def set_color(n, r, g, b)
     with_lock do
-      command("setcolor:#{n + 1}-#{[r, g, b].join(",")};")
+      command("setcolor:#{led_number_at_index(n)}-#{[r, g, b].join(",")};")
     end
   end
 
@@ -194,18 +194,18 @@ class Lightpack
     with_lock do
       colors = [r, g, b].join(",")
 
-      cmd = "setcolor:"
+      message = "setcolor:"
       led_count.times do |i|
-        cmd << "#{i}-#{colors};"
+        message << "#{led_number_at_index(i)}-#{colors};"
       end
-      command cmd
+      command(message)
     end
   end
 
   def set_led_areas(n, dimensions)
     with_lock do
       dimensions = [:x, :y, :width, :height].map { |key| dimensions[key] }.join(",")
-      command("setleds:#{n + 1}-#{dimensions};")
+      command("setleds:#{led_number_at_index(n)}-#{dimensions};")
     end
   end
 
@@ -239,6 +239,10 @@ class Lightpack
       else
         result.gsub(" ", "_").to_sym
       end
+    end
+
+    def led_number_at_index(n)
+      n + 1
     end
 end
 
